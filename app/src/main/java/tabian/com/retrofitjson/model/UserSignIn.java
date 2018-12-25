@@ -1,9 +1,9 @@
 package tabian.com.retrofitjson.model;
 
-public class LoginResponse {
+public class UserSignIn {
     String email,password;
 
-    public LoginResponse(String email, String password) {
+    public UserSignIn(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -23,6 +23,4 @@ public class LoginResponse {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
 }

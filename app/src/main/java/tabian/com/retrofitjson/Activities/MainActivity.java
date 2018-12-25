@@ -13,15 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import tabian.com.retrofitjson.APIPackage.SignInRetrofitClient;
 import tabian.com.retrofitjson.APIPackage.SignUpRetrofitClient;
 import tabian.com.retrofitjson.R;
-import tabian.com.retrofitjson.model.LoginResponse;
-import tabian.com.retrofitjson.model.User;
+import tabian.com.retrofitjson.model.UserSignIn;
+import tabian.com.retrofitjson.model.UserSignInResponse;
+import tabian.com.retrofitjson.model.UserSignUp;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,12 +31,13 @@ public class MainActivity extends AppCompatActivity {
     Button btnSignIn;
     EditText passwordEditTextSi;
     private static final String TAG = "MainActivity";
-
+    int aid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         btnSignIn = findViewById(R.id.btnSingIn);
         Button btnSignUp = findViewById(R.id.btnSignUp);
         final EditText etEmail = findViewById(R.id.input_email);
@@ -55,17 +56,17 @@ public class MainActivity extends AppCompatActivity {
                 String lastName = etLastName.getText().toString();
 
 
-                Call<User> call = SignUpRetrofitClient.getInstance().getAPI().signUp(email, password, firstName, phoneNo, lastName, "json");
-                call.enqueue(new Callback<User>() {
+                Call<UserSignUp> call = SignUpRetrofitClient.getInstance().getAPI().signUp(email, password, firstName, phoneNo, lastName);
+                call.enqueue(new Callback<UserSignUp>() {
                     @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        Log.d(TAG, "onResponse: Server Response: " + response.toString());
+                    public void onResponse(Call<UserSignUp> call, Response<UserSignUp> response) {
 
-
+                       Log.d(TAG, "onResponse: Server Response: " + response.body().getEmail());
                     }
 
+
                     @Override
-                    public void onFailure(Call<User> call, Throwable t) {
+                    public void onFailure(Call<UserSignUp> call, Throwable t) {
                         Log.e(TAG, "onFailure: Something went wrong: " + t.getMessage());
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
@@ -112,25 +113,41 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         } else {
                             //////////////////////////////////////////////////////
-                            Call<User> call = SignInRetrofitClient.getInstance().getAPI().signIn(passwordEditTextSi.getText().toString(),
-                                    emailEditTextSi.getText().toString(),"json");
-                            call.enqueue(new Callback<User>() {
+                            Call<UserSignIn> call = SignInRetrofitClient.getInstance().getAPI().signIn(passwordEditTextSi.getText().toString(),
+                                    emailEditTextSi.getText().toString());
+
+                            call.enqueue(new Callback<UserSignIn>() {
                                              @Override
-                                             public void onResponse(Call<User> call, Response<User> response) {
-                                                 User loginResponse=response.body();
-                                                 if (emailEditTextSi.getText().toString().equals(loginResponse.getEmail())){
-                                                     Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                                 }else {
-                                                     Toast.makeText(MainActivity.this, "No success", Toast.LENGTH_SHORT).show();
+                                             public void onResponse(Call<UserSignIn> call, Response<UserSignIn> response) {
+                                                 UserSignIn userSignInResponse =response.body();
+                                                 if (response.code()==200){
+                                                     Toast.makeText(MainActivity.this, "200", Toast.LENGTH_SHORT).show();
+                                                 }else{
+                                                     Toast.makeText(MainActivity.this, "not 200", Toast.LENGTH_SHORT).show();
                                                  }
 
                                              }
 
                                              @Override
-                                             public void onFailure(Call<User> call, Throwable t) {
+                                             public void onFailure(Call<UserSignIn> call, Throwable t) {
 
                                              }
                                          });
+
+                            Call<UserSignInResponse> call1 = SignInRetrofitClient.getInstance().getAPI().signInResponse();
+                            call1.enqueue(new Callback<UserSignInResponse>() {
+                                @Override
+                                public void onResponse(Call<UserSignInResponse> call, Response<UserSignInResponse> response) {
+                                   UserSignInResponse userSignInResponse=response.body();
+                                    Toast.makeText(MainActivity.this, userSignInResponse.getEmail()+"/n"+userSignInResponse.getSuccess()+"/n"+userSignInResponse.getPhoneNo()+"/n"+userSignInResponse.getLastName()+"/n"+userSignInResponse.getFirstName()+"/n"+userSignInResponse.getAid(), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserSignInResponse> call, Throwable t) {
+                                    Toast.makeText(MainActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                                     //////////////////////////////////////////////////////
 
                         }

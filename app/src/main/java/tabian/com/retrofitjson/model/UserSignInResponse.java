@@ -1,16 +1,15 @@
 package tabian.com.retrofitjson.model;
 
-import retrofit2.http.Field;
+public class UserSignInResponse {
+    String email,firstName,phoneNo,lastName,success,aid;
 
-public class User {
-     String email,password,firstName,phoneNo,lastName;
-
-    public User(String email, String password, String firstName, String phoneNo, String lastName) {
+    public UserSignInResponse(String email, String firstName, String phoneNo, String lastName, String success, String aid) {
         this.email = email;
-        this.password = password;
         this.firstName = firstName;
         this.phoneNo = phoneNo;
         this.lastName = lastName;
+        this.success = success;
+        this.aid = aid;
     }
 
     public String getEmail() {
@@ -19,14 +18,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -51,5 +42,21 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(String success) {
+        this.success = success;
+    }
+
+    public String getAid() {
+        return aid;
+    }
+
+    public void setAid(String aid) {
+        this.aid = aid;
     }
 }

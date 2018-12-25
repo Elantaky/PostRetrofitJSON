@@ -1,30 +1,37 @@
 package tabian.com.retrofitjson.APIPackage;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
-import tabian.com.retrofitjson.model.LoginResponse;
-import tabian.com.retrofitjson.model.User;
+import tabian.com.retrofitjson.model.UserSignIn;
+import tabian.com.retrofitjson.model.UserSignInResponse;
+import tabian.com.retrofitjson.model.UserSignUp;
 
 /**
- * Created by User on 5/1/2017.
+ * Created by UserSignUp on 5/1/2017.
  */
 public interface APIInterface {
     interface SignUpInterface {
 
         @FormUrlEncoded
         @POST("{signUp}")
-        Call<User> signUp(
-                // @HeaderMap Map<String, String> headers,
-                // @Path("signUp") String username,
+        Call<UserSignUp> signUp(
+
                 @Field("email") String email,
                 @Field("password") String password,
                 @Field("firstName") String firstName,
                 @Field("phoneNo") String phoneNo,
-                @Field("lastName") String lastName,
-                @Field("api-type") String type
+                @Field("lastName") String lastName
+
+        );
+      //@FormUrlEncoded
+        @GET("{signUp}")
+        Call<UserSignUp> signUpResponse(
+
+                @Field("success") String success,
+                @Field("aid") int aid
 
         );
 
@@ -35,10 +42,23 @@ public interface APIInterface {
 
         @FormUrlEncoded
         @POST("{signIn}")
-        Call<User> signIn(
+        Call<UserSignIn> signIn(
                 @Field("email") String email,
-                @Field("password") String password,
-                @Field("api-type") String type
+                @Field("password") String password
+        );
+
+        //@FormUrlEncoded
+        @GET("{signIn}")
+        Call<UserSignInResponse> signInResponse(
+/*                @Field("email") String email,
+                @Field("firstName") String firstName,
+                @Field("phoneNo") String phoneNo,
+                @Field("lastName") String lastName,
+                @Field("success") String success,
+                @Field("aid") int aid*/
+                //@Field("type") String type
+
+
         );
     }
 
