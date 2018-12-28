@@ -1,9 +1,25 @@
 package tabian.com.retrofitjson.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import retrofit2.http.Field;
 
 public class UserSignUp {
-     String email,password,firstName,phoneNo,lastName;
+
+/*    @SerializedName("email")
+    String email;
+
+    @SerializedName("password")
+    String password;
+
+    @SerializedName("firstName")
+    String firstName;
+
+    @SerializedName("phoneNo")
+    String phoneNo;
+
+    @SerializedName("lastName")
+    String lastName;
 
     public UserSignUp(String email, String password, String firstName, String phoneNo, String lastName) {
         this.email = email;
@@ -51,5 +67,5 @@ public class UserSignUp {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
+    }*/
 }

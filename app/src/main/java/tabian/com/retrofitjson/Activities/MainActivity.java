@@ -22,6 +22,7 @@ import tabian.com.retrofitjson.R;
 import tabian.com.retrofitjson.model.UserSignIn;
 import tabian.com.retrofitjson.model.UserSignInResponse;
 import tabian.com.retrofitjson.model.UserSignUp;
+import tabian.com.retrofitjson.model.UserSignUpResponse;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     Button btnSignIn;
     EditText passwordEditTextSi;
     private static final String TAG = "MainActivity";
-    int aid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +55,24 @@ public class MainActivity extends AppCompatActivity {
                 String phoneNo = etPhoneNo.getText().toString();
                 String lastName = etLastName.getText().toString();
 
-
-                Call<UserSignUp> call = SignUpRetrofitClient.getInstance().getAPI().signUp(email, password, firstName, phoneNo, lastName);
-                call.enqueue(new Callback<UserSignUp>() {
+                Call<UserSignUpResponse> call = SignUpRetrofitClient.getInstance().getAPI().signUp(email, password, firstName, phoneNo, lastName);
+                call.enqueue(new Callback<UserSignUpResponse>() {
                     @Override
-                    public void onResponse(Call<UserSignUp> call, Response<UserSignUp> response) {
-
-                       Log.d(TAG, "onResponse: Server Response: " + response.body().getEmail());
+                    public void onResponse(Call<UserSignUpResponse> call, Response<UserSignUpResponse> response) {
+                        UserSignUpResponse userSignUp = response.body();
+                        Log.v("WWW", "onResponse: Status Response: " + response.isSuccessful());
+                        Log.v("WWW", "onResponse: Server Response: " + response.body());
+                        Toast.makeText(MainActivity.this, userSignUp.getSuccess()+"and your id code is : "+userSignUp.getAid(), Toast.LENGTH_SHORT).show();
                     }
 
-
                     @Override
-                    public void onFailure(Call<UserSignUp> call, Throwable t) {
-                        Log.e(TAG, "onFailure: Something went wrong: " + t.getMessage());
+                    public void onFailure(Call<UserSignUpResponse> call, Throwable t) {
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 });
 
             }
         });
-
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     private AlertDialog getSignInDialog() {
@@ -113,42 +109,27 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         } else {
                             //////////////////////////////////////////////////////
-                            Call<UserSignIn> call = SignInRetrofitClient.getInstance().getAPI().signIn(passwordEditTextSi.getText().toString(),
-                                    emailEditTextSi.getText().toString());
+                            Call<UserSignInResponse> call = SignInRetrofitClient.getInstance().getAPI().signIn(emailEditTextSi.getText().toString(),passwordEditTextSi.getText().toString()
+                                    );
 
-                            call.enqueue(new Callback<UserSignIn>() {
-                                             @Override
-                                             public void onResponse(Call<UserSignIn> call, Response<UserSignIn> response) {
-                                                 UserSignIn userSignInResponse =response.body();
-                                                 if (response.code()==200){
-                                                     Toast.makeText(MainActivity.this, "200", Toast.LENGTH_SHORT).show();
-                                                 }else{
-                                                     Toast.makeText(MainActivity.this, "not 200", Toast.LENGTH_SHORT).show();
-                                                 }
-
-                                             }
-
-                                             @Override
-                                             public void onFailure(Call<UserSignIn> call, Throwable t) {
-
-                                             }
-                                         });
-
-                            Call<UserSignInResponse> call1 = SignInRetrofitClient.getInstance().getAPI().signInResponse();
-                            call1.enqueue(new Callback<UserSignInResponse>() {
+                            call.enqueue(new Callback<UserSignInResponse>() {
                                 @Override
                                 public void onResponse(Call<UserSignInResponse> call, Response<UserSignInResponse> response) {
-                                   UserSignInResponse userSignInResponse=response.body();
-                                    Toast.makeText(MainActivity.this, userSignInResponse.getEmail()+"/n"+userSignInResponse.getSuccess()+"/n"+userSignInResponse.getPhoneNo()+"/n"+userSignInResponse.getLastName()+"/n"+userSignInResponse.getFirstName()+"/n"+userSignInResponse.getAid(), Toast.LENGTH_SHORT).show();
-
+                                    UserSignInResponse userSignInResponse = response.body();
+                                    Toast.makeText(MainActivity.this, "welcome "+userSignInResponse.getFirstName(), Toast.LENGTH_SHORT).show();
+                                    if ("dd".equals(userSignInResponse.getFirstName())) {
+                                        Toast.makeText(MainActivity.this, "dd", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "not dd", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-
                                 @Override
                                 public void onFailure(Call<UserSignInResponse> call, Throwable t) {
-                                    Toast.makeText(MainActivity.this, "failed", Toast.LENGTH_SHORT).show();
+
                                 }
                             });
-                                    //////////////////////////////////////////////////////
+
+                            //////////////////////////////////////////////////////
 
                         }
                     }

@@ -12,15 +12,8 @@ public class UserSignUpResponse {
         return success;
     }
 
-    public void setSuccess(String success) {
-        this.success = success;
-    }
-
     public String getAid() {
         return aid;
     }
 
-    public void setAid(String aid) {
-        this.aid = aid;
-    }
 }
